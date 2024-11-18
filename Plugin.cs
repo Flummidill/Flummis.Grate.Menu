@@ -44,7 +44,7 @@ namespace Grate
             try
             {
                 gt = this.gameObject.GetOrAddComponent<GestureTracker>();
-                nph = this.gameObject.GetOrAddComponent<NetworkPropertyHandler>();  
+                nph = this.gameObject.GetOrAddComponent<NetworkPropertyHandler>();
                 menuController = Instantiate(monkeMenuPrefab).AddComponent<MenuController>();
             }
             catch (Exception e)
@@ -128,7 +128,6 @@ namespace Grate
                         text.transform.localRotation = Quaternion.identity;
                         text.transform.localScale = Vector3.one;
                         text.color = Color.green;
-                        //text.text = "Hello World";
                         text.fontSize = 24;
                         text.font = Font.CreateDynamicFontFromOSFont("Arial", 24);
                         text.alignment = TextAnchor.MiddleCenter;
@@ -187,8 +186,7 @@ namespace Grate
                 Logging.Info("Platform: ", platform);
                 IsSteam = platform.ToLower().Contains("steam");
 
-                NetworkSystem.Instance.OnJoinedRoomEvent += roomJoined;
-                NetworkSystem.Instance.OnReturnedToSinglePlayer += roomLeft;
+                NetworkSystem.Instance.OnJoinedRoomEvent += EnableMenu;
 
                 if (DebugMode)
                     CreateDebugGUI();
@@ -199,34 +197,10 @@ namespace Grate
             }
         }
 
-        private void roomLeft()
+        private void EnableMenu()
         {
-            if (inRoom)
-            {
-                ModdedLeave();
-            }
-        }
-
-        private void roomJoined()
-        {
-            if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-            {
-                ModdedJoin();
-            }
-        }
-
-        void ModdedJoin()
-        {
-            Logging.Debug("RoomJoined");
             inRoom = true;
             Setup();
-        }
-
-        void ModdedLeave()
-        {
-            Logging.Debug("RoomLeft");
-            inRoom = false;
-            Cleanup();
         }
 
         public void JoinLobby(string name, string gamemode)
@@ -243,11 +217,11 @@ namespace Grate
                 Logging.Debug("Waiting to disconnect");
             }
             while (PhotonNetwork.InRoom);
-            
+
             string gamemodeCache = GorillaComputer.instance.currentGameMode.Value;
             Logging.Debug("Changing gamemode from", gamemodeCache, "to", gamemode);
             GorillaComputer.instance.currentGameMode.Value = gamemode;
-            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(name,JoinType.Solo);
+            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(name, JoinType.Solo);
 
             while (!PhotonNetwork.InRoom)
             {

@@ -388,3 +388,13 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+/.editorconfig
+/Bark.sln
+/CHANGELOG.md
+/Directory.Build.props
+/Directory.Build.targets
+/LICENSE.txt
+/MakeRelease.ps1
+/README.md
+/Testing-Procedures.md
+/ver.txt
