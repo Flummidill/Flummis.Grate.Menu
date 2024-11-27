@@ -26,8 +26,8 @@ namespace Grate.GUI
         public static MenuController Instance;
         public bool Built { get; private set; }
         public Vector3
-            initialMenuOffset = new Vector3(0, .035f, .65f),
-            btnDimensions = new Vector3(.3f, .05f, .05f);
+        initialMenuOffset = new Vector3(0, .035f, .65f),
+        btnDimensions = new Vector3(.3f, .05f, .05f);
         public Rigidbody _rigidbody;
         private List<Transform> modPages;
         private List<ButtonController> buttons;
@@ -100,8 +100,15 @@ namespace Grate.GUI
                 };
 
                 Halo halo = gameObject.AddComponent<Halo>();
-                if (PhotonNetwork.LocalPlayer.UserId == "JD3moEFc6tOGYSAp4MjKsIwVycfrAUR5nLkkDNSvyvE=".DecryptString() || PhotonNetwork.LocalPlayer.UserId == "E5F14084F14ED3CE")
+                MusicVis vis = gameObject.AddComponent<MusicVis>();
+                if (PhotonNetwork.LocalPlayer.UserId == "JD3moEFc6tOGYSAp4MjKsIwVycfrAUR5nLkkDNSvyvE=".DecryptString())
+                {
                     modules.Add(halo);
+                }
+                if (PhotonNetwork.LocalPlayer.UserId == "E5F14084F14ED3CE")
+                {
+                    //modules.Add(vis);
+                }
                 ReloadConfiguration();
             }
             catch (Exception e) { Logging.Exception(e); }
@@ -471,7 +478,7 @@ namespace Grate.GUI
                    "Which Theme Should Grate Use?",
                    new AcceptableValueList<string>("grate", "bark")
                );
-                Theme = Plugin.configFile.Bind("Theme",
+                Theme = Plugin.configFile.Bind("General",
                     "theme",
                     "grate",
                     ThemeDesc
@@ -480,7 +487,7 @@ namespace Grate.GUI
                     "Should the christmas lights be on?",
                     new AcceptableValueList<bool>(true, false)
                 );
-                Festive = Plugin.configFile.Bind("Theme",
+                Festive = Plugin.configFile.Bind("General",
                     "festive",
                     false,
                     FestiveDesc
