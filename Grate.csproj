@@ -5,14 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="MakeRelease.ps1" />
     <None Remove="Resources\barkbundle" />
     <None Remove="Resources\gratebundle" />
     <None Remove="Resources\portals" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="MakeRelease.ps1" />
     <EmbeddedResource Include="Resources\barkbundle" />
     <EmbeddedResource Include="Resources\gratebundle" />
   </ItemGroup>
