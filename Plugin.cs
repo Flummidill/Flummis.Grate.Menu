@@ -187,8 +187,7 @@ namespace Grate
                 Logging.Info("Platform: ", platform);
                 IsSteam = platform.ToLower().Contains("steam");
 
-                NetworkSystem.Instance.OnJoinedRoomEvent += roomJoined;
-                NetworkSystem.Instance.OnReturnedToSinglePlayer += roomLeft;
+                NetworkSystem.Instance.OnJoinedRoomEvent += EnableMenu;
 
                 if (DebugMode)
                     CreateDebugGUI();
@@ -199,34 +198,10 @@ namespace Grate
             }
         }
 
-        private void roomLeft()
+        private void EnableMenu()
         {
-            if (inRoom)
-            {
-                ModdedLeave();
-            }
-        }
-
-        private void roomJoined()
-        {
-            if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-            {
-                ModdedJoin();
-            }
-        }
-
-        void ModdedJoin()
-        {
-            Logging.Debug("RoomJoined");
             inRoom = true;
             Setup();
-        }
-
-        void ModdedLeave()
-        {
-            Logging.Debug("RoomLeft");
-            inRoom = false;
-            Cleanup();
         }
 
         public void JoinLobby(string name, string gamemode)
