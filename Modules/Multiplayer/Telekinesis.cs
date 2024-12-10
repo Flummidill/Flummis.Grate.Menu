@@ -284,12 +284,11 @@ namespace Grate.Modules.Multiplayer
                 grippingRight =
                     rig.rightIndex.calcT < .5f &&
                     rig.rightMiddle.calcT > .5f;
-                //rig.rightThumb.calcT > .5f;
 
                 grippingLeft =
                     rig.leftIndex.calcT < .5f &&
                     rig.leftMiddle.calcT > .5f;
-                //rig.leftThumb.calcT > .5f;
+
                 return grippingRight || grippingLeft;
             }
 
