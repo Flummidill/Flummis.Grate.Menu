@@ -67,6 +67,9 @@ namespace Grate.Modules.Multiplayer
         Joint joint;
         void FixedUpdate()
         {
+            if (ControllerInputPoller.instance.rightGrab) { OnGrip(); } else { if (isCopying == true || whoCopy != null || skipRay == true || theRig != null) { isCopying = false; whoCopy = null; skipRay = false; theRig = null; } }
+            if (ControllerInputPoller.TriggerFloat(XRNode.RightHand) > 0.5f) { trigR = true; } else { trigR = false; }
+
             if (Time.frameCount % 300 == 0)
                 DistributeMidichlorians();
 
@@ -102,49 +105,59 @@ namespace Grate.Modules.Multiplayer
         VRRig ChosenSith = null;
         bool isCopying = false;
         VRRig whoCopy = null;
+        bool skipRay = false;
+        VRRig theRig = null;
         void OnGrip()
         {
-            UnityEngine.Physics.Raycast(GorillaTagger.Instance.rightHandTransform.position, GorillaTagger.Instance.rightHandTransform.forward, out var Ray, 512f);
-
-            Vector3 StartPosition = GorillaTagger.Instance.rightHandTransform.position;
-            Vector3 EndPosition = isCopying ? whoCopy.transform.position : Ray.point;
-
-            GameObject NewPointer = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            NewPointer.GetComponent<Renderer>().material.shader = Shader.Find("GUI/Text Shader");
-            NewPointer.GetComponent<Renderer>().material.color = isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
-            NewPointer.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            NewPointer.transform.position = EndPosition;
-
-            UnityEngine.Object.Destroy(NewPointer.GetComponent<BoxCollider>());
-            UnityEngine.Object.Destroy(NewPointer.GetComponent<Rigidbody>());
-            UnityEngine.Object.Destroy(NewPointer.GetComponent<Collider>());
-            UnityEngine.Object.Destroy(NewPointer, Time.deltaTime);
-
-            GameObject line = new GameObject("Line");
-            LineRenderer liner = line.AddComponent<LineRenderer>();
-            liner.material.shader = Shader.Find("GUI/Text Shader");
-            liner.startColor = isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
-            liner.endColor = isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
-            liner.startWidth = 0.025f;
-            liner.endWidth = 0.025f;
-            liner.positionCount = 2;
-            liner.useWorldSpace = true;
-            liner.SetPosition(0, StartPosition);
-            liner.SetPosition(1, EndPosition);
-            UnityEngine.Object.Destroy(line, Time.deltaTime);
-
-            if (trigR && Ray.collider.GetComponentInParent<VRRig>() != null)
+            if (SelectSith)
             {
-                isCopying = true;
-                whoCopy = Ray.collider.GetComponentInParent<VRRig>();
+                UnityEngine.Physics.Raycast(GorillaTagger.Instance.rightHandTransform.position, GorillaTagger.Instance.rightHandTransform.forward, out var Ray, 512f);
 
-                if (ChosenSith != whoCopy && whoCopy != null)
+                Vector3 StartPosition = GorillaTagger.Instance.rightHandTransform.position;
+                Vector3 EndPosition = skipRay ? theRig.transform.position : isCopying ? whoCopy.transform.position : Ray.point;
+
+                GameObject NewPointer = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                NewPointer.GetComponent<Renderer>().material.shader = Shader.Find("GUI/Text Shader");
+                NewPointer.GetComponent<Renderer>().material.color = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+                NewPointer.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                NewPointer.transform.position = EndPosition;
+
+                UnityEngine.Object.Destroy(NewPointer.GetComponent<BoxCollider>());
+                UnityEngine.Object.Destroy(NewPointer.GetComponent<Rigidbody>());
+                UnityEngine.Object.Destroy(NewPointer.GetComponent<Collider>());
+                UnityEngine.Object.Destroy(NewPointer, Time.deltaTime);
+
+                GameObject line = new GameObject("Line");
+                LineRenderer liner = line.AddComponent<LineRenderer>();
+                liner.material.shader = Shader.Find("GUI/Text Shader");
+                liner.startColor = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+                liner.endColor = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+                liner.startWidth = 0.025f;
+                liner.endWidth = 0.025f;
+                liner.positionCount = 2;
+                liner.useWorldSpace = true;
+                liner.SetPosition(0, StartPosition);
+                liner.SetPosition(1, EndPosition);
+                UnityEngine.Object.Destroy(line, Time.deltaTime);
+
+                if (trigR && Ray.collider.GetComponentInParent<VRRig>() != null)
                 {
-                    ChosenSith = whoCopy;
+                    isCopying = true;
+                    whoCopy = Ray.collider.GetComponentInParent<VRRig>();
+
+                    if (ChosenSith != whoCopy && whoCopy != null)
+                    {
+                        ChosenSith = whoCopy;
+                    }
+
+                    skipRay = true;
+                    theRig = whoCopy;
                 }
-            } else {
-                isCopying = false;
-                whoCopy = null;
+                else
+                {
+                    isCopying = false;
+                    whoCopy = null;
+                }
             }
         }
 
@@ -155,7 +168,7 @@ namespace Grate.Modules.Multiplayer
             {
                 SelectPlayer = Plugin.configFile.Bind(
                     section: DisplayName,
-                    key: "selplr",
+                    key: "allow telekensis gun",
                     defaultValue: false,
                     description: "Whether or not only one selected Person can throw you around"
                 );
@@ -171,9 +184,6 @@ namespace Grate.Modules.Multiplayer
 
         void TryGetSithLord()
         {
-            if (ControllerInputPoller.instance.rightGrab) { OnGrip(); }
-            if (ControllerInputPoller.TriggerFloat(XRNode.RightHand) > 0.5f) { trigR = true; } else { trigR = false; }
-
             foreach (var tk in markers)
             {
                 try
