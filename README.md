@@ -6,6 +6,6 @@
   </a>
 
   <a href="https://github.com/Flummidill/Flummis.Grate.Menu/releases">
-    <img src="https://img.shields.io/github/downloads/Flummidill/Flummis.Grate.Menu/latest/total?style=for-the-badge&label=downloads&color=255%2C%20255%2C%20255"</img>
+    <img src="https://img.shields.io/github/downloads/Flummidill/Flummis.Grate.Menu/latest/total?style=for-the-badge&label=downloads&color=lime"</img>
   </a>
 </div>
