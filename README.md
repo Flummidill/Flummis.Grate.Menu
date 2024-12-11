@@ -2,7 +2,7 @@
   <h1>Flummi's Grate Menu</h1>
 
   <a href="https://github.com/Flummidill/Flummis.Grate.Menu/compare/261869e...master">
-    <img src="https://img.shields.io/badge/view-changelog-gray?style=for-the-badge&labelColor=lime"</img>
+    <img src="https://img.shields.io/badge/view-changelog-lime?style=for-the-badge"</img>
   </a>
 
   <a href="https://github.com/Flummidill/Flummis.Grate.Menu/releases">
