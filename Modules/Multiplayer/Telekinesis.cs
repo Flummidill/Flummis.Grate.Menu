@@ -168,7 +168,7 @@ namespace Grate.Modules.Multiplayer
             {
                 SelectPlayer = Plugin.configFile.Bind(
                     section: DisplayName,
-                    key: "allow telekensis gun",
+                    key: "allow gun",
                     defaultValue: false,
                     description: "Whether or not only one selected Person can throw you around"
                 );
