@@ -47,7 +47,7 @@ namespace Grate.Modules.Movement
             Patches.VRRigCachePatches.OnRigCached += OnRigCached;
         }
 
-        private void OnRigCached(Player player, VRRig rig)
+        private void OnRigCached(NetPlayer player, VRRig rig)
         {
             rig?.gameObject?.GetComponent<BubbleMarker>()?.Obliterate();
         }

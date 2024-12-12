@@ -76,7 +76,7 @@ namespace Grate.Modules.Misc
             catch (Exception e) { Logging.Exception(e); }
         }
 
-        private void OnRigCached(Player player, VRRig rig)
+        private void OnRigCached(NetPlayer player, VRRig rig)
         {
             rig?.gameObject?.GetComponent<HaloMarker>()?.Obliterate();
         }

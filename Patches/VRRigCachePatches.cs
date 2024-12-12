@@ -15,7 +15,7 @@ namespace Grate.Patches
     [HarmonyPatch]
     public class VRRigCachePatches
     {
-        public static Action<Player, VRRig> OnRigCached;
+        public static Action<NetPlayer, VRRig> OnRigCached;
 
         static IEnumerable<MethodBase> TargetMethods()
         {
@@ -24,7 +24,7 @@ namespace Grate.Patches
             };
         }
 
-        private static void Prefix(Player player, VRRig vrrig)
+        private static void Prefix(NetPlayer player, VRRig vrrig)
         {
             OnRigCached?.Invoke(player, vrrig);
         }

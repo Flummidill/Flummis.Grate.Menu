@@ -260,7 +260,7 @@ namespace Grate.Modules.Multiplayer
             catch (Exception e) { Logging.Exception(e); }
         }
 
-        private void OnRigCached(Player player, VRRig rig)
+        private void OnRigCached(NetPlayer player, VRRig rig)
         {
             Firefly target = null;
             foreach (Firefly fly in fireflies)

@@ -46,7 +46,7 @@ namespace Grate.Modules.Physics
             }
         }
 
-        void OnRigCached(Player player, VRRig rig)
+        void OnRigCached(NetPlayer player, VRRig rig)
         {
             try
             {

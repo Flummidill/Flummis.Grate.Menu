@@ -91,7 +91,7 @@ namespace Grate.GUI
                     gameObject.AddComponent<Piggyback>(),
                     gameObject.AddComponent<Telekinesis>(),
                     gameObject.AddComponent<Fireflies>(),
-                    //gameObject.AddComponent<XRay>(),
+                    gameObject.AddComponent<ESP>(),
                     //gameObject.AddComponent<RatSword>(),
                     //gameObject.AddComponent<Kamehameha>(),
 
@@ -169,10 +169,14 @@ namespace Grate.GUI
 
         void SettingsChanged(object sender, SettingChangedEventArgs e)
         {
-            if (e.ChangedSetting == SummonInput ||
-                e.ChangedSetting == SummonInputHand)
+            if (e.ChangedSetting == SummonInput || e.ChangedSetting == SummonInputHand)
+            {
                 ReloadConfiguration();
-            ThemeChanged();
+            }
+            if(e.ChangedSetting == Theme || e.ChangedSetting == Festive)
+            {
+                ThemeChanged();
+            }
         }
 
         void Summon(InputTracker _) { Summon(); }
