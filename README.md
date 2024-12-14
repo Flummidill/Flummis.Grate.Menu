@@ -1,7 +1,7 @@
 <div align="center">
   <h1>Flummi's Grate Menu</h1>
 
-  <a href="https://github.com/Flummidill/Flummis.Grate.Menu/compare/261869e...master">
+  <a href="https://github.com/Flummidill/Flummis.Grate.Menu/compare/261869e...1.5.9">
     <img src="https://img.shields.io/badge/view-changelog-lime?style=for-the-badge"</img>
   </a>
 
