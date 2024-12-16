@@ -24,7 +24,7 @@ namespace Grate
     public class Plugin : BaseUnityPlugin
     {
         public static Plugin Instance;
-        public static bool initialized, WaWa_graze_dot_cc;
+        public static bool initialized, inRoom;
         bool pluginEnabled = false;
         public static AssetBundle assetBundle;
         public static AssetBundle grateBundle;
@@ -39,8 +39,8 @@ namespace Grate
 
         public void Setup()
         {
-            if (menuController || !pluginEnabled || !WaWa_graze_dot_cc) return;
-            Logging.Debug("Menu:", menuController, "Plugin Enabled:", pluginEnabled, "InRoom:", WaWa_graze_dot_cc);
+            if (menuController || !pluginEnabled || !inRoom) return;
+            Logging.Debug("Menu:", menuController, "Plugin Enabled:", pluginEnabled, "InRoom:", inRoom);
             try
             {
                 gt = this.gameObject.GetOrAddComponent<GestureTracker>();
@@ -74,7 +74,6 @@ namespace Grate
             {
                 Instance = this;
                 Logging.Init();
-                CI.Init();
                 configFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "Grate.cfg"), true);
                 Logging.Debug("Found", GrateModule.GetGrateModuleTypes().Count, "modules");
                 foreach (Type moduleType in GrateModule.GetGrateModuleTypes())
@@ -187,8 +186,7 @@ namespace Grate
                 Logging.Info("Platform: ", platform);
                 IsSteam = platform.PlatformTag == "Steam";
 
-                NetworkSystem.Instance.OnJoinedRoomEvent += OnJoinedRoom_RenamedHaha;
-                NetworkSystem.Instance.OnReturnedToSinglePlayer += roomJoined;
+                NetworkSystem.Instance.OnJoinedRoomEvent += EnableMenu;
 
                 if (DebugMode)
                     CreateDebugGUI();
@@ -199,36 +197,10 @@ namespace Grate
             }
         }
 
-        private void roomJoined()
+        private void EnableMenu()
         {
-            if (WaWa_graze_dot_cc)
-            {
-                ModdedJoin();
-            }
-        }
-
-        private void OnJoinedRoom_RenamedHaha()
-        {
-            if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-            {
-                ModdedTrueJoin_RenamedHaha();
-            }
-        }
-
-        void ModdedTrueJoin_RenamedHaha()
-        {
-            Logging.Debug("RoomJoined");
-            WaWa_graze_dot_cc = true;
+            inRoom = true;
             Setup();
-        }
-
-        //this isnt rly a join, it's to break "cracks"
-        //I will keep renaming whatever i have to :3
-        void ModdedJoin()
-        {
-            Logging.Debug("RoomLeft");
-            WaWa_graze_dot_cc = false;
-            Cleanup();
         }
 
         public void JoinLobby(string name, string gamemode)

@@ -11,7 +11,7 @@ namespace Grate.Patches
         private static bool Prefix()
         {
                 Player.Instance.TeleportTo(new Vector3(-66.4845f, 11.7564f, - 82.5688f), Quaternion.Euler(Vector3.zero));
-                return !Plugin.WaWa_graze_dot_cc;
+                return !Plugin.inRoom;
         }
     }
 }
