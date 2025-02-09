@@ -17,7 +17,7 @@ namespace Grate.Patches
         private static void Postfix(GorillaZipline __instance, BezierSpline ___spline, float ___currentT, 
             GorillaHandClimber ___currentClimber)
         {
-            if(!Plugin.WaWa_graze_dot_cc) return;
+            if (!Plugin.inRoom) return;
             try
             {
                 var rockets = Rockets.Instance;

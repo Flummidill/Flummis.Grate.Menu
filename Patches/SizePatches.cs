@@ -15,7 +15,7 @@ namespace Grate.Patches
     {
         private static void Postfix(ref SizeChanger __result, Transform t)
         {
-            if (!Plugin.WaWa_graze_dot_cc) return;
+            if (!Plugin.inRoom) return;
             try
             {
             if (Potions.active && t == GorillaTagger.Instance.offlineVRRig.transform)
