@@ -51,7 +51,7 @@ namespace Grate.Modules.Physics
             try
             {
                 rig.transform.localScale = Vector3.one;
-                rig.scaleFactor = 1;
+                rig.ScaleMultiplier = 1;
             }
             catch (Exception e)
             {
@@ -161,7 +161,7 @@ namespace Grate.Modules.Physics
                 try
                 {
                     rig.transform.localScale = Vector3.one;
-                    rig.scaleFactor = 1;
+                    rig.ScaleMultiplier = 1;
                 }
                 catch (Exception e) { Logging.Exception(e); };
             }
@@ -178,7 +178,7 @@ namespace Grate.Modules.Physics
                         if (!t) continue;
                         float scale = scaleFromChanger.GetValue<float>(controllingChanger.GetValue<SizeChanger>(t), t);
                         t.localScale = Vector3.one * scale;
-                        manager.targetRig.scaleFactor = scale;
+                        manager.targetRig.ScaleMultiplier = scale;
                         NetworkPropertyHandler.Instance?.ChangeProperty(playerSizeKey, Player.Instance.scale);
                     }
                     else
