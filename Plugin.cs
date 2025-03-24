@@ -28,7 +28,7 @@ namespace Grate
     public class Plugin : BaseUnityPlugin
     {
         public static Plugin Instance;
-        public static bool initialized, WaWa_graze_dot_cc;
+        public static bool initialized, inRoom;
         bool pluginEnabled = false;
         public static AssetBundle assetBundle;
         public static MenuController menuController;
@@ -43,8 +43,8 @@ namespace Grate
 
         public void Setup()
         {
-            if (menuController || !pluginEnabled || !WaWa_graze_dot_cc)
-            Logging.Debug("Menu:", menuController, "Plugin Enabled:", pluginEnabled, "InRoom:", WaWa_graze_dot_cc);
+            if (menuController || !pluginEnabled || !inRoom)
+            Logging.Debug("Menu:", menuController, "Plugin Enabled:", pluginEnabled, "InRoom:", inRoom);
             try
             {
                 gt = this.gameObject.GetOrAddComponent<GestureTracker>();
@@ -80,7 +80,6 @@ namespace Grate
             {
                 Instance = this;
                 Logging.Init();
-                CI.Init();
                 configFile = new ConfigFile(Path.Combine(Paths.ConfigPath, "Grate.cfg"), true);
                 Logging.Debug("Found", GrateModule.GetGrateModuleTypes().Count, "modules");
                 foreach (Type moduleType in GrateModule.GetGrateModuleTypes())
@@ -195,9 +194,7 @@ namespace Grate
                 Logging.Info("Platform: ", platform);
                 IsSteam = platform.PlatformTag.Contains("Steam");
 
-                NetworkSystem.Instance.OnJoinedRoomEvent += аaа;
-                NetworkSystem.Instance.OnReturnedToSinglePlayer += аaа;
-                Application.wantsToQuit += Quit;
+                NetworkSystem.Instance.OnJoinedRoomEvent += JoinRoom;
 
                 if (DebugMode)
                     CreateDebugGUI();
@@ -208,52 +205,10 @@ namespace Grate
             }
         }
 
-        private bool Quit()
+        private void JoinRoom()
         {
-            if (NetworkSystem.Instance.InRoom)
-            {
-                NetworkSystem.Instance.OnReturnedToSinglePlayer += aQuit;
-                NetworkSystem.Instance.ReturnToSinglePlayer();
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        private void aQuit()
-        {
-            WaWa_graze_dot_cc = false;
-            Cleanup();
-            Invoke("DelayQuit", 1);
-        }
-
-        void DelayQuit()
-        {
-            Application.Quit();
-        }
-
-        private void аaа()
-        {
-            Jоοin();
-        }
-
-        void Jоοin()
-        {
-            if (NetworkSystem.Instance.InRoom)
-            {
-                if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-                {
-                    WaWa_graze_dot_cc = true;
-                    Setup();
-                }
-            }
-            else
-            {
-                WaWa_graze_dot_cc = false;
-                Cleanup();
-            }
+            inRoom = true;
+            Setup();
         }
 
         public void JoinLobby(string name)

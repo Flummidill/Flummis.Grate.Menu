@@ -20,7 +20,7 @@ namespace Grate.Patches
             {
                 wawa2.SetActive(false);
             }
-            return !Plugin.WaWa_graze_dot_cc;
+            return !Plugin.inRoom;
         }
     }
 }
