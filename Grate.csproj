@@ -57,9 +57,6 @@
     <Reference Include="BepInEx.Preloader">
       <HintPath>D:\SteamLibrary\steamapps\common\Gorilla Tag\BepInEx\core\BepInEx.Preloader.dll</HintPath>
     </Reference>
-    <Reference Include="Cinemachine">
-      <HintPath>D:\SteamLibrary\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Cinemachine.dll</HintPath>
-    </Reference>
     <Reference Include="Facebook.Wit.Dictation">
       <HintPath>D:\SteamLibrary\steamapps\common\Gorilla Tag\Gorilla Tag_Data\Managed\Facebook.Wit.Dictation.dll</HintPath>
     </Reference>
