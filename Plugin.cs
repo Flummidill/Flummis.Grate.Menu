@@ -28,7 +28,7 @@ namespace Grate
     public class Plugin : BaseUnityPlugin
     {
         public static Plugin Instance;
-        public static bool initialized, inRoom;
+        public static bool initialized, injected, inRoom;
         bool pluginEnabled = false;
         public static AssetBundle assetBundle;
         public static MenuController menuController;
@@ -207,8 +207,11 @@ namespace Grate
 
         private void JoinRoom()
         {
-            inRoom = true;
-            Setup();
+            if (!inRoom)
+            {
+                inRoom = true;
+                Setup();
+            }
         }
 
         public void JoinLobby(string name)
@@ -218,7 +221,6 @@ namespace Grate
 
         IEnumerator JoinLobbyInternal(string name)
         {
-            NetworkSystem.Instance.ReturnToSinglePlayer();
             do
             {
                 yield return new WaitForSeconds(1f);

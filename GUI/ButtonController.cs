@@ -120,11 +120,7 @@ public class ButtonController : MonoBehaviour
     {
         try
         {
-            if (!NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-            {
-                NetworkSystem.Instance.ReturnToSinglePlayer();
-            }
-                if (blockers.Contains(blocker)) return;
+            if (blockers.Contains(blocker)) return;
             Interactable = false;
             blockers.Add(blocker);
         }
