@@ -62,6 +62,8 @@ These modules can be useful for exploring the game world, experimenting with gam
 ## Usage
 When you join a modded lobby, simply beat on your chest like a gorilla in an alternating fashion with both hands 4 times (LRLR or RLRL). This will summon the interface in front of you. To hide the interface, simply grab it and throw it away.
 
+this can even be changed to button in the settings
+
 ## Installation
 To install *Grate*, simply download the .dll from releases and put it in your Gorilla Tag plugins folder. Additionally, you can use The-Graze's fork of [Monke Mod Manager](https://github.com/The-Graze/MonkeModManager) to install *Grate*.
 
