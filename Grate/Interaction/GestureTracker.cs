@@ -170,14 +170,8 @@ public class GestureTracker : MonoBehaviour
 
     public void UpdateValues()
     {
-        if (NetworkSystem.Instance.InRoom)
-        {
-            if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-                foreach (var input in inputs)
-                    input.UpdateValues();
-            else
-                NetworkSystem.Instance.ReturnToSinglePlayer();
-        }
+        foreach (var input in inputs)
+            input.UpdateValues();
     }
 
     private void TrackBodyVectors()

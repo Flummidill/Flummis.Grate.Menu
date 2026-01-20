@@ -13,7 +13,6 @@ public class SizeChangePatch
 {
     private static void Postfix(ref SizeChanger __result, Transform t)
     {
-        if (!Plugin.WaWaGrazeDotCc) return;
         try
         {
             if (Potions.active && t == GorillaTagger.Instance.offlineVRRig.transform)

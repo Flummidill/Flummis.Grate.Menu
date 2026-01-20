@@ -1,4 +1,5 @@
-﻿using Grate.GUI;
+﻿using GorillaNetworking;
+using Grate.GUI;
 
 namespace Grate.Modules.Misc;
 
@@ -21,7 +22,7 @@ public class Lobby : GrateModule
         timesPressed++;
         if (timesPressed >= 3)
         {
-            Plugin.Instance.JoinLobby("GRATE");
+            PhotonNetworkController.Instance.AttemptToJoinSpecificRoom("GRATE", JoinType.Solo);
             timesPressed = 0;
             return;
         }

@@ -15,7 +15,6 @@ public class ZiplineUpdatePatch
     private static void Postfix(GorillaZipline __instance, BezierSpline ___spline, float ___currentT,
         GorillaHandClimber ___currentClimber)
     {
-        if (!Plugin.WaWaGrazeDotCc) return;
         try
         {
             var rockets = Rockets.Instance;

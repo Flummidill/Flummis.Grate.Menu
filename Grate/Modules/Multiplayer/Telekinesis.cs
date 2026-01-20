@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using BepInEx.Configuration;
 using GorillaLocomotion;
 using Grate.Extensions;
 using Grate.Gestures;
 using Grate.GUI;
 using Grate.Tools;
 using UnityEngine;
+using UnityEngine.XR;
 
 namespace Grate.Modules.Multiplayer;
 
@@ -28,6 +30,10 @@ public class Telekinesis : GrateModule
 
     private void FixedUpdate()
     {
+        if (ControllerInputPoller.instance.rightGrab) { OnGrip(); } else { if (isCopying == true || whoCopy != null || skipRay == true || theRig != null) { isCopying = false; whoCopy = null; skipRay = false; theRig = null; } }
+        if (ControllerInputPoller.TriggerFloat(XRNode.RightHand) > 0.5f) { trigR = true; } else { trigR = false; }
+
+
         if (Time.frameCount % 300 == 0)
             DistributeMidichlorians();
 
@@ -94,12 +100,93 @@ public class Telekinesis : GrateModule
         }
     }
 
+    bool trigR = false;
+    VRRig ChosenSith = null;
+    bool isCopying = false;
+    VRRig whoCopy = null;
+    bool skipRay = false;
+    VRRig theRig = null;
+    void OnGrip()
+    {
+        if (SelectSith)
+        {
+            UnityEngine.Physics.Raycast(GorillaTagger.Instance.rightHandTransform.position, GorillaTagger.Instance.rightHandTransform.forward, out var Ray, 512f);
+
+            Vector3 StartPosition = GorillaTagger.Instance.rightHandTransform.position;
+            Vector3 EndPosition = skipRay ? theRig.transform.position : isCopying ? whoCopy.transform.position : Ray.point;
+
+            GameObject NewPointer = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            NewPointer.GetComponent<Renderer>().material.shader = Shader.Find("GUI/Text Shader");
+            NewPointer.GetComponent<Renderer>().material.color = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+            NewPointer.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+            NewPointer.transform.position = EndPosition;
+
+            UnityEngine.Object.Destroy(NewPointer.GetComponent<BoxCollider>());
+            UnityEngine.Object.Destroy(NewPointer.GetComponent<Rigidbody>());
+            UnityEngine.Object.Destroy(NewPointer.GetComponent<Collider>());
+            UnityEngine.Object.Destroy(NewPointer, Time.deltaTime);
+
+            GameObject line = new GameObject("Line");
+            LineRenderer liner = line.AddComponent<LineRenderer>();
+            liner.material.shader = Shader.Find("GUI/Text Shader");
+            liner.startColor = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+            liner.endColor = skipRay ? new Color(0f, 0f, 0f, 1f) : isCopying ? new Color(0f, 0f, 0f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
+            liner.startWidth = 0.025f;
+            liner.endWidth = 0.025f;
+            liner.positionCount = 2;
+            liner.useWorldSpace = true;
+            liner.SetPosition(0, StartPosition);
+            liner.SetPosition(1, EndPosition);
+            UnityEngine.Object.Destroy(line, Time.deltaTime);
+
+            if (trigR && Ray.collider.GetComponentInParent<VRRig>() != null)
+            {
+                isCopying = true;
+                whoCopy = Ray.collider.GetComponentInParent<VRRig>();
+
+                if (ChosenSith != whoCopy && whoCopy != null)
+                {
+                    ChosenSith = whoCopy;
+                }
+
+                skipRay = true;
+                theRig = whoCopy;
+            }
+            else
+            {
+                isCopying = false;
+                whoCopy = null;
+            }
+        }
+    }
+
+    public static ConfigEntry<bool> SelectPlayer;
+    public static void BindConfigEntries()
+    {
+        try
+        {
+            SelectPlayer = Plugin.ConfigFile.Bind(
+                section: DisplayName,
+                key: "allow gun",
+                defaultValue: false,
+                description: "Whether or not only one selected Person can throw you around"
+            );
+        }
+        catch (Exception e) { Logging.Exception(e); }
+    }
+
+    bool SelectSith = false;
+    protected override void ReloadConfiguration()
+    {
+        SelectSith = SelectPlayer.Value;
+    }
+
     private void TryGetSithLord()
     {
         foreach (var tk in markers)
             try
             {
-                if (tk && tk.IsGripping() && tk.PointingAtMe())
+                if (tk && tk.IsGripping() && tk.PointingAtMe() && (SelectSith ? tk.rig == ChosenSith : true))
                 {
                     sithLord = tk;
                     playerParticles.Play();

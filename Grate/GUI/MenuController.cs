@@ -57,7 +57,6 @@ public class MenuController : GrateGrabbable
 
     protected override void Awake()
     {
-        if (!NetworkSystem.Instance.GameModeString.Contains("MODDED_")) return;
         Instance = this;
         try
         {
@@ -164,8 +163,6 @@ public class MenuController : GrateGrabbable
 
     private void FixedUpdate()
     {
-        if (PhotonNetwork.InRoom && !NetworkSystem.Instance.GameModeString.Contains("MODDED")) gameObject.Obliterate();
-
         // The potions tutorial needs to be updated frequently to keep the current size
         // up-to-date, even when the mod is disabled
         if (GrateModule.LastEnabled && GrateModule.LastEnabled == Potions.Instance)

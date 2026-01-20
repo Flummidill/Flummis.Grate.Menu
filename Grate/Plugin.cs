@@ -17,16 +17,14 @@ using Grate.Tools;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.UI;
-using Utilla.Behaviours;
 
 namespace Grate;
 
-[BepInDependency("org.legoandmars.gorillatag.utilla")]
 [BepInPlugin(PluginInfo.Guid, PluginInfo.Name, PluginInfo.Version)]
 public class Plugin : BaseUnityPlugin
 {
     public static Plugin? Instance;
-    public static bool Initialized, WaWaGrazeDotCc;
+    public static bool Initialized;
     public static AssetBundle? AssetBundle;
     public static MenuController? MenuController;
     private static GameObject? monkeMenuPrefab;
@@ -136,16 +134,13 @@ public class Plugin : BaseUnityPlugin
     {
         try
         {
-            FindFirstObjectByType<ConductBoardManager>().boardContent.Add(new("GRATE", PluginInfo.Description));
             Logging.Debug("OnGameInitialized");
             Initialized = true;
             var platform = (PlatformTagJoin)Traverse.Create(PlayFabAuthenticator.instance).Field("platform").GetValue();
             Logging.Info("Platform: ", platform);
             IsSteam = platform.PlatformTag.Contains("Steam");
 
-            NetworkSystem.Instance.OnJoinedRoomEvent += Аaа;
-            NetworkSystem.Instance.OnReturnedToSinglePlayer += Аaа;
-            Application.wantsToQuit += Quit;
+            Setup();
             
             if (DebugMode)
                 CreateDebugGUI();
@@ -154,73 +149,5 @@ public class Plugin : BaseUnityPlugin
         {
             Logging.Exception(ex);
         }
-    }
-
-    private bool Quit()
-    {
-        if (NetworkSystem.Instance.InRoom)
-        {
-            NetworkSystem.Instance.OnReturnedToSinglePlayer += AQuit;
-            NetworkSystem.Instance.ReturnToSinglePlayer();
-            return false;
-        }
-
-        return true;
-    }
-
-    private void AQuit()
-    {
-        WaWaGrazeDotCc = false;
-        Cleanup();
-        Invoke(nameof(DelayQuit), 1);
-    }
-
-    private void DelayQuit()
-    {
-        Application.Quit();
-    }
-
-    private void Аaа()
-    {
-        StartCoroutine(Jоοin());
-    }
-
-    private IEnumerator Jоοin()
-    {
-        Cleanup();
-        yield return new WaitForSeconds(1);
-        if (NetworkSystem.Instance.InRoom)
-        {
-            if (NetworkSystem.Instance.GameModeString.Contains("MODDED_"))
-            {
-                WaWaGrazeDotCc = true;
-                Setup();
-            }
-            else
-            {
-                WaWaGrazeDotCc = false;
-                Cleanup();
-            }
-        }
-        else
-        {
-            WaWaGrazeDotCc = false;
-            Cleanup();
-        }
-    }
-
-    public void JoinLobby(string lobbyName)
-    {
-        StartCoroutine(JoinLobbyInternal(lobbyName));
-    }
-
-    private IEnumerator JoinLobbyInternal(string lobbyName)
-    {
-        if (NetworkSystem.Instance.InRoom)
-            if (NetworkSystem.Instance.RoomName == lobbyName)
-                NetworkSystem.Instance.ReturnToSinglePlayer();
-
-        yield return new WaitForSeconds(3);
-        PhotonNetworkController.Instance.AttemptToJoinSpecificRoom(lobbyName, JoinType.Solo);
     }
 }
